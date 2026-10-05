@@ -1,30 +1,64 @@
-<html><head><title> Моделирование по закону Гука
-</title></head><body>
- 
-<canvas id=polotno style="border:10px groove silver;"
-width=800 height=800></canvas><br><br>
-<button onclick="nextStep()"> PRESS </button>
-<input type=range min=0 max=800 value=400
-  onchange="x=+value, y=Y; refresh()"
-  style="width:600;">
- 
-<script>
-ctx = polotno.getContext('2d');
-W = polotno.width;
-H = polotno.height;
-X = 400, Y = 400;
-x = 400, y = 400;
-refresh =()=> {
-  polotno.width += 0;
-  ctx.fillRect(x,y,20,20);
-}
-nextStep =()=> {
-  x = (x+X)/2,
-  y = (y+Y)/2;
-  refresh()
-}
-refresh( X, Y );
-setInterval (nextStep, 1000 );
-</script>
- 
-</body></html>
+<html>
+<head>
+  <title>Моделирование по закону Гука</title>
+</head>
+<body>
+
+  <canvas id="polotno" style="border: 10px groove silver;"
+          width="800" height="800"></canvas>
+  <br><br>
+
+  <button id="button" onclick="startStop()">START</button>
+  <input type="range" min="0" max="780" value="400"
+         oninput="x = +value; v = 0; refresh()"
+         style="width: 600px;">
+
+  <script>
+    const canvas = document.getElementById('polotno');
+    const button = document.getElementById('button');
+    const ctx = canvas.getContext('2d');
+
+    const X = 400;
+    const Y = 400;
+
+    const m = 1;       // масса
+    const k = 10;      // жёсткость пружины
+    const dt = 0.02;   // шаг времени в секундах
+
+    let x = X;
+    let v = 0;         // скорость груза
+    let timer = null;
+
+    function refresh() {
+      canvas.width += 0;
+      ctx.fillRect(x, Y, 20, 20);
+    }
+
+    function nextStep() {
+      const force = -k * (x - X);
+      const acceleration = force / m;
+
+      // Скорость сохраняется между шагами — это создаёт инерцию.
+      v += acceleration * dt;
+      x += v * dt;
+
+      refresh();
+    }
+
+    function startStop() {
+      if (timer === null) {
+        v = 0;
+        timer = setInterval(nextStep, dt * 1000);
+        button.textContent = 'STOP';
+      } else {
+        clearInterval(timer);
+        timer = null;
+        button.textContent = 'START';
+      }
+    }
+
+    refresh();
+  </script>
+
+</body>
+</html>
