@@ -1,45 +1,17 @@
 <html>
 <head>
   <title>Моделирование по закону Гука</title>
-  <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
-  <style>
-    body {
-      background: silver;
-      margin: 0;
-      padding: 10px;
-    }
-    .container {
-      display: flex;
-      gap: 20px;
-      align-items: flex-start;
-    }
-    .left-panel {
-      display: flex;
-      flex-direction: column;
-    }
-    #map {
-      width: 500px;
-      height: 800px;
-      border: 10px groove silver;
-      box-sizing: border-box;
-    }
-  </style>
 </head>
-<body>
+<body background="https://cdn.lifehacker.ru/wp-content/uploads/2026/03/Bez_imeni_1_1773134992.jpg">
 
-  <div class="container">
-    <div class="left-panel">
-      <canvas id="polotno" style="border: 10px groove silver;"
-              width="800" height="800"></canvas>
-      <br><br>
-      <button id="button" onclick="startStop()">START</button>
-      <input type="range" min="0" max="780" value="400"
-             oninput="x = +value; v = 0; refresh()"
-             style="width: 600px;">
-    </div>
+  <canvas id="polotno" style="border: 10px groove silver;"
+          width="800" height="800"></canvas>
+  <br><br>
 
-    <div id="map"></div>
-  </div>
+  <button id="button" onclick="startStop()">START</button>
+  <input type="range" min="0" max="780" value="400"
+         oninput="x = +value; v = 0; refresh()"
+         style="width: 600px;">
 
   <script>
     const canvas = document.getElementById('polotno');
@@ -59,7 +31,6 @@
 
     function refresh() {
       canvas.width += 0;
-      ctx.fillStyle = 'black';
       ctx.fillRect(x, Y, 20, 20);
     }
 
@@ -67,6 +38,7 @@
       const force = -k * (x - X);
       const acceleration = force / m;
 
+      // Скорость сохраняется между шагами — это создаёт инерцию.
       v += acceleration * dt;
       x += v * dt;
 
@@ -86,26 +58,6 @@
     }
 
     refresh();
-
-    // Инициализация Яндекс.Карты с центром на Пущино
-    ymaps.ready(init);
-
-    function init() {
-      const map = new ymaps.Map("map", {
-        center: [54.8333, 37.6167], // Пущино
-        zoom: 13,
-        controls: ['zoomControl', 'fullscreenControl', 'typeSelector']
-      });
-
-      const placemark = new ymaps.Placemark([54.8333, 37.6167], {
-        hintContent: 'Пущино',
-        balloonContent: 'Пущино — город в Московской области'
-      }, {
-        preset: 'islands#redIcon'
-      });
-
-      map.geoObjects.add(placemark);
-    }
   </script>
 
 </body>
