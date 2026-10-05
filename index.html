@@ -1,0 +1,30 @@
+<html><head><title> Моделирование по закону Гука
+</title></head><body>
+ 
+<canvas id=polotno style="border:10px groove silver;"
+width=800 height=800></canvas><br><br>
+<button onclick="nextStep()"> PRESS </button>
+<input type=range min=0 max=800 value=400
+  onchange="x=+value, y=Y; refresh()"
+  style="width:600;">
+ 
+<script>
+ctx = polotno.getContext('2d');
+W = polotno.width;
+H = polotno.height;
+X = 400, Y = 400;
+x = 400, y = 400;
+refresh =()=> {
+  polotno.width += 0;
+  ctx.fillRect(x,y,20,20);
+}
+nextStep =()=> {
+  x = (x+X)/2,
+  y = (y+Y)/2;
+  refresh()
+}
+refresh( X, Y );
+setInterval (nextStep, 1000 );
+</script>
+ 
+</body></html>
